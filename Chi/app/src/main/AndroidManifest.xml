@@ -9,26 +9,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ShowProductActivity"
+        <activity android:name=".activity.UpdateProductActivity"></activity>
+        <activity
+            android:name=".activity.ShowProductActivity"
             android:label="Product"
-            android:parentActivityName=".activity.ShowCategoryActivity"
-            >
-
-        </activity>
-        <activity android:name=".activity.ShowCategoryActivity"
-            android:label="APP Quản Lí Chi"
-            >
+            android:parentActivityName=".activity.ShowCategoryActivity"></activity>
+        <activity
+            android:name=".activity.ShowCategoryActivity"
+            android:label="APP Quản Lí Chi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.InsertProductActivity"
-            android:label="Add Product"
-            >
-
-        </activity>
+        <activity
+            android:name=".activity.InsertProductActivity"
+            android:label="Add Product"></activity>
     </application>
 
 </manifest>

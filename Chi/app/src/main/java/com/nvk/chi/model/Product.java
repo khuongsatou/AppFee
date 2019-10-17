@@ -1,6 +1,7 @@
 package com.nvk.chi.model;
 
 public class Product {
+    private int id;
     private String name;
     private int quatity;
     private double price;
@@ -11,13 +12,22 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, int quatity, double price, double sum, int cat_id, Boolean status) {
+    public Product(int id,String name, int quatity, double price, double sum, int cat_id, Boolean status) {
+        this.id = id;
         this.name = name;
         this.quatity = quatity;
         this.price = price;
         this.sum = sum;
         this.cat_id = cat_id;
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

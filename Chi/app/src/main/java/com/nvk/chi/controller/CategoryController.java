@@ -18,7 +18,9 @@ public class CategoryController {
 
     private static final String TABLE_CATEGORY = "tbCategory";
     private static final String COLUMN_CATNAME = "CatName";
+    private static final String COLUMN_SUM = "sum";
     private static final String COLUMN_STATUS = "Status";
+
 
 
 
@@ -50,13 +52,12 @@ public class CategoryController {
     }
 
 
-    public Boolean InsertCategory(Category category){
+    public void InsertCategory(Category category){
         db = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_CATNAME,category.getCatName());
-        long result = db.insert(TABLE_CATEGORY,null,contentValues);
+        db.insert(TABLE_CATEGORY,null,contentValues);
         db.close();
-        return result > 0 ? true: false;
     }
 
 

@@ -1,6 +1,8 @@
 package com.nvk.chi.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,36 +14,44 @@ import android.widget.Toast;
 
 import com.nvk.chi.R;
 import com.nvk.chi.controller.ProductController;
+import com.nvk.chi.database.DBHelper;
 import com.nvk.chi.model.Product;
+
 import java.util.ArrayList;
 
 import static com.nvk.chi.activity.ShowProductActivity.KEY_CAT_ID;
+import static com.nvk.chi.activity.ShowProductActivity.KEY_CAT_NAME;
 
-public class InsertProductActivity extends AppCompatActivity {
+public class UpdateProductActivity extends AppCompatActivity {
     private EditText edtName,edtPrice;
     private Button btnOK,btnCancel;
     private Spinner snQuatity;
-
     public ProductController productController;
-
+    public int id_product = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_insert_product);
-
+        setContentView(R.layout.activity_update_product);
 
         Radiation();
         CreateDatabase();
         CreateAdapterQuality();
-        CreateInsertProduct();
+        LoadDataProduct();
+        CreateUpdateProduct();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    private void LoadDataProduct() {
+        Intent intent = getIntent();
+        int cat_id = intent.getIntExtra(KEY_CAT_ID,-1);
+        String name = intent.getStringExtra(KEY_CAT_NAME);
+        this.id_product = productController.getProByID(name,cat_id);
+        Product product = productController.getOneProduct(this.id_product);
+        edtName.setText(product.getName());
+        edtPrice.setText(product.getPrice()+"");
+        snQuatity.setSelection(product.getQuatity() -1);
     }
 
-    private void CreateInsertProduct() {
+    private void CreateUpdateProduct() {
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,19 +64,21 @@ public class InsertProductActivity extends AppCompatActivity {
                 }
                 Double price_checked = 0.0;
                 try{
-                     price_checked = Double.parseDouble(price);
+                     price_checked=Double.parseDouble(price);
                 }catch (Exception err){
                     Toast.makeText(getApplicationContext(),"Bạn Nhập giá Không Hợp lệ",Toast.LENGTH_SHORT).show();
                 }
+
 
                     Product product = new Product();
                     product.setName(name);
                     product.setPrice(price_checked);
                     product.setQuatity(quatity);
                     product.setCat_id(getIntent().getIntExtra(KEY_CAT_ID,-1));
-                    productController.InsertProduct(product);
+                    productController.UpdateProduct( UpdateProductActivity.this.id_product,product);
                     setResult(RESULT_OK);
                     finish();
+
 
 
             }
@@ -79,9 +91,6 @@ public class InsertProductActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
     }
 
     private void CreateAdapterQuality() {
@@ -96,10 +105,9 @@ public class InsertProductActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         snQuatity.setAdapter(adapter);
 
-
-
-
     }
+
+
 
     private void CreateDatabase() {
         productController = new ProductController(this);

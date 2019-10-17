@@ -25,8 +25,9 @@ import java.util.List;
 
 
 public class ShowProductActivity extends AppCompatActivity {
-    public static final String KEY_CAT_ID ="123" ;
+    public static final String KEY_CAT_ID ="1234" ;
     private static final int REQUESTCODE = 123;
+    public static final String KEY_CAT_NAME = "123";
     private RecyclerView rcvProduct;
     private FloatingActionButton fabAddProduct;
 
@@ -53,11 +54,27 @@ public class ShowProductActivity extends AppCompatActivity {
         fabAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v,"Bạn Vừa chon thêm Product",Snackbar.LENGTH_LONG).setAction("Action",null).show();
                 ShowInsertProduct();
             }
         });
     }
+
+
+
+    public void UpdateDataCategory(String name,int cat_id){
+        Intent intent = new Intent(this,UpdateProductActivity.class);
+        intent.putExtra(KEY_CAT_ID,cat_id);
+        intent.putExtra(KEY_CAT_NAME,name);
+        startActivityForResult(intent,REQUESTCODE);
+    }
+
+   public void DeleteProduct(int id){
+        productController.DeleteProduct(id);
+        productList.clear();
+        productList.addAll(productController.getProByCatID(this.position_cat_id));
+        adapter.notifyDataSetChanged();
+   }
+
 
     private void ShowInsertProduct() {
         Intent intent = new Intent(this,InsertProductActivity.class);
@@ -73,8 +90,6 @@ public class ShowProductActivity extends AppCompatActivity {
             productList.clear();
             productList.addAll(productController.getProByCatID(this.position_cat_id));
             adapter.notifyDataSetChanged();
-        }else{
-            Toast.makeText(getApplicationContext(),"Bạn Chưa Save",Toast.LENGTH_SHORT).show();
         }
 
     }
