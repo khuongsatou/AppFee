@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,8 +26,10 @@ import java.util.List;
 
 
 public class ShowProductActivity extends AppCompatActivity {
-    public static final String KEY_CAT_ID ="123" ;
+    public static final String KEY_CAT_ID ="1234" ;
     private static final int REQUESTCODE = 123;
+    public static final String KEY_CAT_NAME = "123";
+    private static final String KEY_SUM = "sum";
     private RecyclerView rcvProduct;
     private FloatingActionButton fabAddProduct;
 
@@ -35,7 +38,8 @@ public class ShowProductActivity extends AppCompatActivity {
     private ProductController productController;
     public static final String KEY_SHOW_PRODUCT = "123";
     private int position_cat_id = -1;
-
+    private TextView tvSum;
+    private int sum =0;
 
 
     @Override
@@ -47,17 +51,36 @@ public class ShowProductActivity extends AppCompatActivity {
         GetData();
         CreateAdapter();
         InsertDataCategory();
+
     }
+
+
 
     private void InsertDataCategory() {
         fabAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v,"Bạn Vừa chon thêm Product",Snackbar.LENGTH_LONG).setAction("Action",null).show();
                 ShowInsertProduct();
             }
         });
     }
+
+
+
+    public void UpdateDataCategory(String name,int cat_id){
+        Intent intent = new Intent(this,UpdateProductActivity.class);
+        intent.putExtra(KEY_CAT_ID,cat_id);
+        intent.putExtra(KEY_CAT_NAME,name);
+        startActivityForResult(intent,REQUESTCODE);
+    }
+
+   public void DeleteProduct(int id){
+        productController.DeleteProduct(id);
+        productList.clear();
+        productList.addAll(productController.getProByCatID(this.position_cat_id));
+        adapter.notifyDataSetChanged();
+   }
+
 
     private void ShowInsertProduct() {
         Intent intent = new Intent(this,InsertProductActivity.class);
@@ -73,8 +96,6 @@ public class ShowProductActivity extends AppCompatActivity {
             productList.clear();
             productList.addAll(productController.getProByCatID(this.position_cat_id));
             adapter.notifyDataSetChanged();
-        }else{
-            Toast.makeText(getApplicationContext(),"Bạn Chưa Save",Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -85,6 +106,16 @@ public class ShowProductActivity extends AppCompatActivity {
         this.position_cat_id = getIntent().getIntExtra(KEY_SHOW_PRODUCT,-1);
         productList.clear();
         productList.addAll(productController.getProByCatID(this.position_cat_id));
+
+        Sum();
+
+    }
+
+    public void Sum() {
+        for (int i = 0; i < productList.size(); i++) {
+            this.sum+=productList.get(i).getSum();
+        }
+        tvSum.setText("Tổng Chi: "+sum);
     }
 
     private void CreateAdapter() {
@@ -98,5 +129,6 @@ public class ShowProductActivity extends AppCompatActivity {
     private void Radiation() {
         rcvProduct = findViewById(R.id.rcvProduct);
         fabAddProduct = findViewById(R.id.fabAddProduct);
+        tvSum = findViewById(R.id.tvSum);
     }
 }

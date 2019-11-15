@@ -18,7 +18,10 @@ public class CategoryController {
 
     private static final String TABLE_CATEGORY = "tbCategory";
     private static final String COLUMN_CATNAME = "CatName";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_SUM = "sum";
     private static final String COLUMN_STATUS = "Status";
+
 
 
 
@@ -35,7 +38,9 @@ public class CategoryController {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()){
                 Category category = new Category();
+                int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
                 String catName = cursor.getString(cursor.getColumnIndex(COLUMN_CATNAME));
+                category.setId(id);
                 category.setCatName(catName);
                 categoryList.add(category);
 
@@ -50,15 +55,21 @@ public class CategoryController {
     }
 
 
-    public Boolean InsertCategory(Category category){
+    public void InsertCategory(Category category){
         db = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_CATNAME,category.getCatName());
-        long result = db.insert(TABLE_CATEGORY,null,contentValues);
+        db.insert(TABLE_CATEGORY,null,contentValues);
         db.close();
-        return result > 0 ? true: false;
     }
 
+    public void UpdateCategory(Category category){
+        db = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_CATNAME,category.getCatName());
+        db.update(TABLE_CATEGORY,contentValues,COLUMN_ID + "= ?" ,new String[]{(String.valueOf(category.getId()))});
+        db.close();
+    }
 
 
 

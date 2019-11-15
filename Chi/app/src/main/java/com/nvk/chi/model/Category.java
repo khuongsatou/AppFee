@@ -1,15 +1,25 @@
 package com.nvk.chi.model;
 
 public class Category {
+    private int id;
     private String catName;
     private boolean status;
 
     public Category() {
     }
 
-    public Category(String catName, boolean status) {
+    public Category(int id, String catName, boolean status) {
+        this.id = id;
         this.catName = catName;
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCatName() {
